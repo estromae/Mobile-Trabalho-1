@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Image, ImageBackground, TouchableOpacity, Share, StyleSheet } from "react-native";
-import { format } from 'date-fns'
+import { View, Text, Image, ImageBackground, TouchableOpacity, Share, StyleSheet, ScrollView, StatusBar} from "react-native";
+// import { format } from 'date-fns'
 import Icon from "react-native-vector-icons/AntDesign";
 
 export default function Space() {
     const [title, setTitle] = useState('')
     const [date, setDate] = useState('')
-    const [image, setImage] = useState('')
+    const [image, setImage] = useState('empty')
     const [hdImage, setImageHd] = useState('')
     const [explanation, setExplanation] = useState('')
 
@@ -21,7 +21,8 @@ export default function Space() {
 
     function randomDate() {
         let randomDate = `${parseInt(Math.random() * (2023 - 1997) + 1997)}-${parseInt(Math.random() * (12 - 1) + 1)}-${parseInt(Math.random() * (31 - 1) + 1)}`
-        console.log(format(randomDate, 'dd/mm/yyyy'))
+        console.log(randomDate)
+        // console.log(format(randomDate, 'dd/mm/yyyy'))
         getApi(randomDate)
     }
 
@@ -44,7 +45,7 @@ export default function Space() {
     }
 
     async function share() {
-        await Share.share({message: title + explanation + image})
+        await Share.share({message: hdImage})
     }
 
     function changeQualityImg() {
@@ -53,7 +54,11 @@ export default function Space() {
 
     return (
         <View style={styles.container}>
-            <ImageBackground source={require('./skyblue.jpg')} style={styles.imgBackground} blurRadius={2}>
+        <StatusBar
+            animated={true}
+            hidden={true}
+        />
+        <ImageBackground source={require('./skyblue.jpg')} style={styles.imgBackground} blurRadius={2}>
             <View style={{ flexDirection: 'row', alignItems: 'flex-end'}}>
                 <TouchableOpacity style={styles.button} onPress={() => randomDate()}>
                     <Text style={styles.textButton}>Explore</Text>
@@ -63,19 +68,31 @@ export default function Space() {
                 </TouchableOpacity>
             </View>
             <View style={styles.infoBox}>
-                <View style={{ flex: 0.5, justifyContent: 'center', alignItems: 'center'}}>
-                <Text style={styles.title}>{title}</Text>
+
+                <View style={{ flex: 0.5, justifyContent: 'center', alignItems: 'center', marginVertical: 10}}>
+                    <Text style={styles.title}>{title}</Text>
                 </View>
+
                 <View style={styles.subInfoBox}>
+
                     <Image style={styles.imgApi} source={{uri:image}}/>
-                    <Text></Text>
-                    <Text style={styles.subInfoBoxText}>{explanation}</Text>
+
+                    <Text style={{marginVertical: 5, color: 'white'}}>Date: {date}</Text>
+
+                    <View style={{flex: 1}}>
+                        <ScrollView style={styles.scrollView}>
+                            <Text style={styles.subInfoBoxText}>{explanation}</Text>
+                        </ScrollView>
+                    </View>
+                
                 </View>
-                <TouchableOpacity style={styles.shareButton} onPress={() => share()}>
-                    <Text style={{color: '#0000EE'}}>Share</Text>
-                </TouchableOpacity>
+                <View style={styles.optionsView}>
+                    <TouchableOpacity style={styles.shareButton} onPress={() => share()}>
+                        <Text style={{color: '#0000EE'}}>Share</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
-            </ImageBackground>
+        </ImageBackground>
         </View>
     )
 }
@@ -93,8 +110,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
 
+    scrollView: {
+        flex: 1,
+        marginHorizontal: 20,
+    },
+
     button: {
-        // width: 150,
+        width: 150,
         backgroundColor: 'rgba(39, 39, 39, 1)',
         alignItems: 'center',
         marginVertical: 20,
@@ -112,21 +134,20 @@ const styles = StyleSheet.create({
         flex: 1,
         width: '85%',
         backgroundColor: 'transparent',
-        //opacity: 0.5, 
     },
 
     title: {
-        alignSelf: 'center',
+        fontFamily: 'Roboto',
+        fontWeight: 'bold',
         color: 'white',
     },
 
     subInfoBox: {
         flex: 8,
-        flexDirection: 'row',
+        flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
         flexWrap: 'wrap',
-        //alignContent: 'space-around',
     },
 
     imgApi: {
@@ -135,14 +156,19 @@ const styles = StyleSheet.create({
     },
 
     subInfoBoxText: {
-        width: '90%',
+        fontFamily: 'Roboto',
+        textAlign: 'justify',
         color: 'white',
     },
 
-    shareButton: {
+    optionsView: {
         flex: 0.5,
-        backgroundColor: 'rgba(39, 39, 39, 1)',
+        // backgroundColor: 'rgba(39, 39, 39, 1)',
         alignItems: 'flex-end',
         paddingHorizontal: 20,
+    },
+
+    shareButton: {
+
     },
 })

@@ -1,9 +1,13 @@
 import React from "react";
-import { View, Button, Text, ImageBackground, Touchable, TouchableOpacity, Share, StyleSheet } from "react-native";
+import { View, Button, Text, ImageBackground, Touchable, TouchableOpacity, Share, StyleSheet, StatusBar } from "react-native";
 
 export default function Home({navigation}) {
     return (
+
         <View style={styles.container}>
+        <StatusBar
+        hidden={true}
+        />
             <ImageBackground source={require('./CarNorth_Taylor_6179.jpg')} style={styles.imgBackground}>
                 <View>
                     <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('SpaceScreen')}>
